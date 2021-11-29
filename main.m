@@ -33,8 +33,8 @@ fprintf("Rank of controllability matrix = %d\n",rank(P));
 fprintf("Rank of observability matrix = %d\n", rank(O));
 
 %% Closed Loop
-P = [-1,-2,-3,-4,-5,-6];
-K = place(A,B,P);
+P_CL = [-1,-2,-3,-4,-5,-6];
+K = place(A,B,P_CL);
 
 F = eye(3);
 %% Luenberger observer
