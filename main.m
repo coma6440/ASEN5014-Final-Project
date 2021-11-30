@@ -32,6 +32,9 @@ O = obsv(A,C);
 fprintf("Rank of controllability matrix = %d\n",rank(P));
 fprintf("Rank of observability matrix = %d\n", rank(O));
 
+%% Open Loop
+[OL_poles] = OL_Response(A,sys_OL);
+
 %% Closed Loop
 P_CL = [-1,-2,-3,-4,-5,-6];
 K = place(A,B,P_CL);
