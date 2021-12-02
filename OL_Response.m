@@ -5,8 +5,9 @@ function [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,r_MO2,
 %     rmag = 1;
 %     r = rmag*sign(double(t>1));
     % all step inputs
-    r1 = [r_zero r_MO2 r_zero]; 
-    [y1,t,x1] = lsim(sys_OL,r1,t,x0);
+    r1 = [r_MO3_zeros r_MO3_zeros r_MO3];
+%     [y1,t,x1] = lsim(sys_OL,r1,t,x0);
+    [y1,t,x1] = lsim(sys_OL,r1,t_r_MO3,x0);
 
     x_r1 = y1(:,1);
     y_r1 = y1(:,2);
@@ -22,7 +23,7 @@ function [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,r_MO2,
     plot(t,r1(:,1), 'linewidth', 2)
     ylabel('x (m)')
     xlabel('Time (s)')
-    title('x vs u_x')
+    title('x vs time for r(t)')
     set(gca,'FontSize',15)
     grid on 
     legend('x(t)','Reference')
@@ -33,7 +34,7 @@ function [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,r_MO2,
     plot(t,r1(:,2), 'linewidth', 1)
     ylabel('y (m)')
     xlabel('Time (s)')
-    title('y vs u_y')
+    title('y vs time for r(t)')
     set(gca,'FontSize',15)
     grid on 
     legend('y(t)','Reference')
@@ -44,7 +45,7 @@ function [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,r_MO2,
     plot(t,r1(:,3), 'linewidth', 2)
     ylabel('z (m)')
     xlabel('Time (s)')
-    title('z vs u_z')
+    title('z vs time for r(t)')
     set(gca,'FontSize',15)
     grid on 
     legend('z(t)','Reference')

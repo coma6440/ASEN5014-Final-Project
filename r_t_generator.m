@@ -1,4 +1,4 @@
-function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros] = r_t_generator(rmag,t,dt,x0)
+function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10] = r_t_generator(rmag,t,dt,x0)
     % Basic step desired
     r_step = zeros(1,length(t));
     r_step(t>=5) = rmag;
@@ -36,6 +36,9 @@ function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros] = r_t_gen
    
     t_r_MO3 = 0:Tf/length(r_MO3):Tf-Tf/length(r_MO3);
     r_MO3_zeros = zeros(length(t_r_MO3),1);
+    
+    %Stay at y IC of -10 km 
+    r_y_neg_10 = ones(length(t),1)*-10;
 
 end
 

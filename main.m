@@ -37,18 +37,52 @@ dt = 0.01;
 t = 0:dt:60;
 rmag = 1;
 x0 = [0 -10 0 0 0 0]';
-[r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros] = r_t_generator(rmag,t,dt,x0);
-
-plot(t_r_MO3,r_MO3)
+[r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10] = r_t_generator(rmag,t,dt,x0);
+% plot(t,r_MO2)
 
 %% Open Loop
 [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,r_MO3_zeros,t_r_MO3,t,x0);
 
+%% Closed Loop Reference Tracking Feedback Control
+% Setting CL poles
+% CL_poles = [-1 -2 -3 -4 -5 -6];
+CL_poles = [-0.5 -1 -2 -5 -6 -10];
+
+% Feedback control for r(t) = [step step step]
+r = [r_step r_step+r_y_neg_10 r_step];
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0);
+
+% Feedback control for r(t) = [step 0 0]
+r = [r_step r_zero+r_y_neg_10 r_zero];
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0);
+
+% Feedback control for r(t) = [0 step 0]
+r = [r_zero r_step+r_y_neg_10 r_zero];
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0);
+
+% Feedback control for r(t) = [0 0 step]
+r = [r_zero r_zero+r_y_neg_10 r_step];
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0);
+
+% Feedback control for MO1, r(t) = [r_MO1 0 0]
+r = [r_MO1 r_zero+r_y_neg_10 r_zero];
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0);
+
+% Feedback control for MO1, r(t) = [0 r_MO2 0]
+r = [r_zero r_MO2 r_zero];
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0); %___Need to change ramp to work with IC____
+
+% Feedback control for MO1, r(t) = [r_MO1 0 0]
+r = [r_MO3_zeros r_MO3_zeros+r_y_neg_10(1:length(r_MO3_zeros),:) r_MO3];
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t_r_MO3,r,x0);
+
+% Does no coupling n states make sense? Ask Reade and Conner 
 %% Closed Loop
 P_CL = [-1,-2,-3,-4,-5,-6];
 K = place(A,B,P_CL);
 
 F = eye(3);
+
 %% Luenberger observer
 P_L = [-1, -2, -3, -4, -5, -6];
 L = place(A', C', P_L)';
