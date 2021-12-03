@@ -25,7 +25,8 @@ C = [1,0,0,0,0,0;
 D = zeros(3,3);
 
 sys_OL = ss(A,B,C,D);
-
+pzmap(sys_OL);
+e_OL = eig(A);
 %% Reachability and Observability
 P = ctrb(A,B);
 O = obsv(A,C);
