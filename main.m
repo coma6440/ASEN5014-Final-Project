@@ -98,3 +98,81 @@ sys_CL_OBS = ss(A_cl_aug, B_cl_aug, C_cl_aug, D_cl_aug);
 % Simulate with zero initial error
 
 % Simulate with non-zero initial error
+
+
+%% LQR Optimal State Feedback WITHOUT Integral control and WITHOUT Observer
+
+t = t';
+r = [r_MO1 r_zero+r_y_neg_10 r_zero];
+
+%%Actuator constraints
+umax = 5; %??? what is a reasonable acceleration constraint ???
+n = size(A,1); %#nominal states
+m = size(B,2); %#nominal inputs
+p = size(C,1); %#nominal outputs
+
+%Define closed-loop plant poles via LQR (only vary awts for now)
+awts = [ones(1,n/2)*100, ones(1,n/2)]; %initial design: relative penalties
+bwts = ones(1,p);
+rho = 1;
+
+awts = awts./sum(awts);
+xmax = [10 10 10 .1 .1 .1];
+Q =  diag(awts./xmax); 
+R =  rho*diag(bwts./umax); %rho * eye(p);
+
+OLsys = ss(A,B,C,D);
+[K,W,clEvals] = lqr(OLsys,Q,R); %get optimal K, W
+
+F = inv(C/(-A+B*K)*B);
+
+%CL system
+Acl = A - B*K;
+Bcl = B*F;
+Ccl = C;
+Dcl = D;
+CLsys = ss(Acl,Bcl,Ccl,Dcl);
+
+%%Check that closed-loop system specs met; change rho o'wise
+%%get response to first reference input profile:
+[Y_CL1,~,X_CL1] = lsim(CLsys,r',t');
+%compute resulting actuator efforts in each case, where u = -Kx + Fr
+U_CL1 = -K*X_CL1' + F*r';
+
+%%Plot output response for each input/output channel; compare to desired
+%%reference positions
+figure()
+    subplot(3,1,1), hold on; grid on
+plot(t,Y_CL1(:,1),'b')
+plot(t,r(:,1),'k--')
+legend('y(t)','reference')
+title('y_1 vs. u_1 for rhist1','FontSize',14)
+xlabel('t (secs)','FontSize',14)
+ylabel('displacement (m)','FontSize',14)
+    subplot(3,1,2), hold on; grid on
+plot(t,Y_CL1(:,2),'b')
+plot(t,r(:,2),'k--')
+legend('y(t)','reference')
+title('y_2 vs. u_1 for rhist1','FontSize',14)
+xlabel('t (secs)','FontSize',14)
+ylabel('displacement (m)','FontSize',14)
+    subplot(3,1,3), hold on; grid on
+plot(t,Y_CL1(:,3),'b')
+plot(t,r(:,3),'k--')
+legend('y(t)','reference')
+title('y_3 vs. u_1 for rhist1','FontSize',14)
+xlabel('t (secs)','FontSize',14)
+ylabel('displacement (m)','FontSize',14)
+
+%%Plot actuator efforts and compare to constraints on u
+figure()
+hold on; grid on
+plot(t, U_CL1(1,:),'r')
+plot(t, U_CL1(2,:),'b')
+plot(t, U_CL1(3,:),'g')
+plot(t,umax*ones(size(t)),'k--')
+plot(t,-umax*ones(size(t)),'k--')
+xlabel('t (secs)','FontSize',14)
+ylabel('u effort (m/s^2)','FontSize',14)
+legend('u_1','u_2','u_3','u constraint')
+title('Actuator response for r(t)','FontSize',14)
