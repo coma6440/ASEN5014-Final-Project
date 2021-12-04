@@ -78,30 +78,25 @@ CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0); %___Need to change ramp to work with
 
 % Feedback control for MO1, r(t) = [r_MO1 0 0]
 r = [r_MO3_zeros r_MO3_zeros+r_y_neg_10(1:length(r_MO3_zeros),:) r_MO3];
-CL_Ref_Track_Cont(A,B,C,D,CL_poles,t_r_MO3,r,x0);
+[~, K, F] = CL_Ref_Track_Cont(A,B,C,D,CL_poles,t_r_MO3,r,x0);
 
 % Does no coupling n states make sense? Ask Reade and Conner 
-%% Closed Loop
-P_CL = [-1,-2,-3,-4,-5,-6];
-K = place(A,B,P_CL);
 
-F = eye(3);
+%% Luenberger observer 
+P_L = [-3, -4, -5, -6, -7, -8];
+r = [r_step r_step+r_y_neg_10 r_step];
+x0_true = [x0; zeros(6,1)];
+x0_error = 1*ones(6,1);
+x0_guess = [x0 + x0_error; 5.*x0_error];
 
-%% Luenberger observer
-P_L = [-1, -2, -3, -4, -5, -6];
-L = place(A', C', P_L)';
-
-A_cl_aug = [(A-B*K), B*K; zeros(6), (A-L*C)];
-B_cl_aug = [B*F;zeros(6,3)];
-C_cl_aug = [C, zeros(3,6)];
-D_cl_aug = 0;
-
-sys_CL_OBS = ss(A_cl_aug, B_cl_aug, C_cl_aug, D_cl_aug);
 
 % Simulate with zero initial error
+fprintf("Simulating closed loop with observer, zero error...\n");
+leunberger(A,B,C,F,K,P_L,t,r,x0_true, "Images/obs_zero_init_err");
 
 % Simulate with non-zero initial error
-
+fprintf("Simulating closed loop with observer, nonzero error...\n");
+leunberger(A,B,C,F,K,P_L,t,r,x0_guess, "Images/obs_nonzero_init_err");
 
 %% LQR Optimal State Feedback WITHOUT Integral control and WITHOUT Observer
 
