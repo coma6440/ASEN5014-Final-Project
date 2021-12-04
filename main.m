@@ -26,6 +26,9 @@ D = zeros(3,3);
 
 sys_OL = ss(A,B,C,D);
 pzmap(sys_OL);
+title("");
+saveas(gcf, "Images/pzmap.png")
+close
 e_OL = eig(A);
 %% Reachability and Observability
 P = ctrb(A,B);
