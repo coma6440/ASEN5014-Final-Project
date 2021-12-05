@@ -185,3 +185,30 @@ xlabel('t (secs)','FontSize',14)
 ylabel('u effort (m/s^2)','FontSize',14)
 legend('u_1','u_2','u_3','u constraint')
 title('Actuator response for r(t)','FontSize',14)
+
+%% LQR WITH integral control and observer
+
+Aaug = [A zeros(6,3); -C zeros(3,3)];
+Baug = [B; zeros(3,3)];
+Caug = [C zeros(3,3)];
+Daug = zeros(size(Caug,1),size(Baug,2));
+augOLsys = ss(Aaug,Baug,Caug,Daug);
+
+%Define closed-loop plant poles via LQR (only vary awts for now)
+awts = [ones(1,n/2)*100, ones(1,n/2),50,50,50]; %initial design: relative penalties
+bwts = [1,10,1];
+rho = 12;
+
+awts = awts./sum(awts);
+bwts = bwts./sum(bwts);
+xmax = [10, 10, 10, .1, .1, .1, .1^2, .1^2, .1^2];
+Qaug =  diag(awts./xmax); 
+Raug =  rho*diag(bwts./umax); %rho * eye(p);
+
+[Kaug,Waug,clEvalsAug] = lqr(augOLsys,Qaug,Raug);
+
+XCLO_IC = 0.1*ones(15,1); %change the IC to 0.1's and see what happens!!
+
+[CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
+    t,r,XCLO_IC,umax,'/Images/LQR_refx_initErrx');
+
