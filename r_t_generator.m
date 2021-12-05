@@ -12,19 +12,21 @@ function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10
     r_piece(t>=35) = 0;
 
     % Mission Obj 1
+    MO2_mag = 2;
     r_MO1 = zeros(length(t),1); 
-    r_MO1(t>=5) = rmag;
+    r_MO1(t>=5) = MO2_mag*rmag;
     r_MO1(t>=35) = 0;
 
     % Mission Obj 2
-    ramp_time = 20;
+    ramp_time = 25;
+    M02_mag = 9;
     r_MO2 = zeros(1,length(t));
-    r_MO2(t>5) = rmag/ramp_time*t(5/dt:end-2)-t(5/dt)*rmag/ramp_time;
-    r_MO2(t>5+ramp_time/rmag) = rmag;
+    r_MO2(t>5) = rmag*M02_mag/ramp_time*t(5/dt:end-2)-t(5/dt)*rmag*M02_mag/ramp_time;
+    r_MO2(t>5+ramp_time/rmag) = rmag*M02_mag;
     r_MO2 = r_MO2'+x0(2);
     
     % Mission Obj 3
-    dur = 10;
+    dur = 24;
     Tf = t(end);
     [r_MO3_2,t2] = gensig("square",dur,Tf);
     u = 2*r_MO3_2-rmag;

@@ -1,4 +1,4 @@
-function [sys_CL,K,F] = CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0)
+function [sys_CL,K,F] = CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num)
     K = place(A,B,CL_poles);
     F = inv(C*inv(-A+B*K)*B);
 
@@ -23,7 +23,7 @@ function [sys_CL,K,F] = CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0)
     uy = u_act_r1(2,:);
     uz = u_act_r1(3,:);
     
-    figure()
+    figure(fig_num)
     h = sgtitle('Closed Loop Response for RF Controller, F Tuned');
     set(h,'FontSize',20)
     subplot(3,2,1)
