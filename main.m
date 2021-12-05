@@ -207,7 +207,8 @@ Raug =  rho*diag(bwts./umax); %rho * eye(p);
 
 [Kaug,Waug,clEvalsAug] = lqr(augOLsys,Qaug,Raug);
 
-XCLO_IC = 0.1*ones(15,1); %change the IC to 0.1's and see what happens!!
+XCLO_IC = 0*ones(15,1); %change the IC to 0.1's and see what happens!!
+% XCLO_IC = 0.1*ones(15,1); %change the IC to 0.1's and see what happens!!
 
 [CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
     t,r,XCLO_IC,umax,'/Images/LQR_refx_initErrx');
