@@ -57,34 +57,34 @@ CL_poles = [-15 -20 -5 -25 -10 -30]; % Satisfies specs for all r(t), u(t) way to
 % 5th and 6th poles effects z response only 
 
 % % Feedback control for r(t) = [step step step]
-% r = [r_step r_step+r_y_neg_10 r_step];
-% fig_num = 1;
-% CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
+r = [r_step r_step+r_y_neg_10 r_step];
+fig_num = 1;
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
 
 % Feedback control for r(t) = [step 0 0]
-% r = [r_step r_zero+r_y_neg_10 r_zero];
-% fig_num = 2;
-% CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
+r = [r_step r_zero+r_y_neg_10 r_zero];
+fig_num = 2;
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
 
 % Feedback control for r(t) = [0 step 0]
-% r = [r_zero r_step+r_y_neg_10 r_zero];
-% fig_num = 3;
-% CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
+r = [r_zero r_step+r_y_neg_10 r_zero];
+fig_num = 3;
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
 % 
 % % Feedback control for r(t) = [0 0 step]
-% r = [r_zero r_zero+r_y_neg_10 r_step];
-% fig_num = 4;
-% CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
+r = [r_zero r_zero+r_y_neg_10 r_step];
+fig_num = 4;
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
 
 % Feedback control for MO1, r(t) = [r_MO1 0 0]
-% r = [r_MO1 r_zero+r_y_neg_10 r_zero];
-% fig_num = 5;
-% CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
+r = [r_MO1 r_zero+r_y_neg_10 r_zero];
+fig_num = 5;
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
 
 % % Feedback control for MO1, r(t) = [0 r_MO2 0]
-% r = [r_zero r_MO2 r_zero];
-% fig_num = 6;
-% CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num); 
+r = [r_zero r_MO2 r_zero];
+fig_num = 6;
+CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num); 
 % 
 % % Feedback control for MO1, r(t) = [r_MO1 0 0]
 r = [r_MO3_zeros r_MO3_zeros+r_y_neg_10(1:length(r_MO3_zeros),:) r_MO3];
