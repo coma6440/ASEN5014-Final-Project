@@ -25,7 +25,11 @@ C = [1,0,0,0,0,0;
 D = zeros(3,3);
 
 sys_OL = ss(A,B,C,D);
-
+pzmap(sys_OL);
+title("");
+saveas(gcf, "Images/pzmap.png")
+close
+e_OL = eig(A);
 %% Reachability and Observability
 P = ctrb(A,B);
 O = obsv(A,C);
@@ -85,26 +89,99 @@ CL_poles = [-15 -20 -5 -25 -10 -30]; % Satisfies specs for all r(t), u(t) way to
 % % Feedback control for MO1, r(t) = [r_MO1 0 0]
 r = [r_MO3_zeros r_MO3_zeros+r_y_neg_10(1:length(r_MO3_zeros),:) r_MO3];
 fig_num = 7;
-CL_Ref_Track_Cont(A,B,C,D,CL_poles,t_r_MO3,r,x0,fig_num);
+[~, K, F] = CL_Ref_Track_Cont(A,B,C,D,CL_poles,t_r_MO3,r,x0,fig_num);
 
 % Does no coupling n states make sense? Ask Reade and Conner 
-%% Closed Loop
-P_CL = [-1,-2,-3,-4,-5,-6];
-K = place(A,B,P_CL);
 
-F = eye(3);
+%% Luenberger observer 
+P_L = [-3, -4, -5, -6, -7, -8];
+r = [r_step r_step+r_y_neg_10 r_step];
+x0_true = [x0; zeros(6,1)];
+x0_error = 1*ones(6,1);
+x0_guess = [x0 + x0_error; 5.*x0_error];
 
-%% Luenberger observer
-P_L = [-1, -2, -3, -4, -5, -6];
-L = place(A', C', P_L)';
-
-A_cl_aug = [(A-B*K), B*K; zeros(6), (A-L*C)];
-B_cl_aug = [B*F;zeros(6,3)];
-C_cl_aug = [C, zeros(3,6)];
-D_cl_aug = 0;
-
-sys_CL_OBS = ss(A_cl_aug, B_cl_aug, C_cl_aug, D_cl_aug);
 
 % Simulate with zero initial error
+fprintf("Simulating closed loop with observer, zero error...\n");
+leunberger(A,B,C,F,K,P_L,t,r,x0_true, "Images/obs_zero_init_err");
 
 % Simulate with non-zero initial error
+fprintf("Simulating closed loop with observer, nonzero error...\n");
+leunberger(A,B,C,F,K,P_L,t,r,x0_guess, "Images/obs_nonzero_init_err");
+
+%% LQR Optimal State Feedback WITHOUT Integral control and WITHOUT Observer
+
+t = t';
+r = [r_MO1 r_zero+r_y_neg_10 r_zero];
+
+%%Actuator constraints
+umax = 5; %??? what is a reasonable acceleration constraint ???
+n = size(A,1); %#nominal states
+m = size(B,2); %#nominal inputs
+p = size(C,1); %#nominal outputs
+
+%Define closed-loop plant poles via LQR (only vary awts for now)
+awts = [ones(1,n/2)*100, ones(1,n/2)]; %initial design: relative penalties
+bwts = ones(1,p);
+rho = 1;
+
+awts = awts./sum(awts);
+xmax = [10 10 10 .1 .1 .1];
+Q =  diag(awts./xmax); 
+R =  rho*diag(bwts./umax); %rho * eye(p);
+
+OLsys = ss(A,B,C,D);
+[K,W,clEvals] = lqr(OLsys,Q,R); %get optimal K, W
+
+F = inv(C/(-A+B*K)*B);
+
+%CL system
+Acl = A - B*K;
+Bcl = B*F;
+Ccl = C;
+Dcl = D;
+CLsys = ss(Acl,Bcl,Ccl,Dcl);
+
+%%Check that closed-loop system specs met; change rho o'wise
+%%get response to first reference input profile:
+[Y_CL1,~,X_CL1] = lsim(CLsys,r',t');
+%compute resulting actuator efforts in each case, where u = -Kx + Fr
+U_CL1 = -K*X_CL1' + F*r';
+
+%%Plot output response for each input/output channel; compare to desired
+%%reference positions
+figure()
+    subplot(3,1,1), hold on; grid on
+plot(t,Y_CL1(:,1),'b')
+plot(t,r(:,1),'k--')
+legend('y(t)','reference')
+title('y_1 vs. u_1 for rhist1','FontSize',14)
+xlabel('t (secs)','FontSize',14)
+ylabel('displacement (m)','FontSize',14)
+    subplot(3,1,2), hold on; grid on
+plot(t,Y_CL1(:,2),'b')
+plot(t,r(:,2),'k--')
+legend('y(t)','reference')
+title('y_2 vs. u_1 for rhist1','FontSize',14)
+xlabel('t (secs)','FontSize',14)
+ylabel('displacement (m)','FontSize',14)
+    subplot(3,1,3), hold on; grid on
+plot(t,Y_CL1(:,3),'b')
+plot(t,r(:,3),'k--')
+legend('y(t)','reference')
+title('y_3 vs. u_1 for rhist1','FontSize',14)
+xlabel('t (secs)','FontSize',14)
+ylabel('displacement (m)','FontSize',14)
+
+%%Plot actuator efforts and compare to constraints on u
+figure()
+hold on; grid on
+plot(t, U_CL1(1,:),'r')
+plot(t, U_CL1(2,:),'b')
+plot(t, U_CL1(3,:),'g')
+plot(t,umax*ones(size(t)),'k--')
+plot(t,-umax*ones(size(t)),'k--')
+xlabel('t (secs)','FontSize',14)
+ylabel('u effort (m/s^2)','FontSize',14)
+legend('u_1','u_2','u_3','u constraint')
+title('Actuator response for r(t)','FontSize',14)
