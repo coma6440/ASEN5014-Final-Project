@@ -31,21 +31,21 @@ plot(t,r(:,1),'k--','linewidth',1.5)
 legend('y(t)','reference')
 title('y_1 vs. u_1 for r(t)','FontSize',14)
 xlabel('t (secs)','FontSize',14)
-ylabel('displacement (m)','FontSize',14)
+ylabel('displacement (km)','FontSize',14)
     subplot(3,1,2), hold on; grid on
 plot(t,Y_CLOaug(:,2),'b','linewidth',1.5)
 plot(t,r(:,2),'k--','linewidth',1.5)
 legend('y(t)','reference')
 title('y_2 vs. u_1 for r(t)','FontSize',14)
 xlabel('t (secs)','FontSize',14)
-ylabel('displacement (m)','FontSize',14)
+ylabel('displacement (km)','FontSize',14)
     subplot(3,1,3), hold on; grid on
 plot(t,Y_CLOaug(:,3),'b','linewidth',1.5)
 plot(t,r(:,3),'k--','linewidth',1.5)
 legend('y(t)','reference')
 title('y_3 vs. u_1 for r(t)','FontSize',14)
 xlabel('t (secs)','FontSize',14)
-ylabel('displacement (m)','FontSize',14)
+ylabel('displacement (km)','FontSize',14)
 exportgraphics(gcf,[pwd fname '_output.png']);
 
 %% Plot actuator efforts and compare to constraints on u
@@ -58,7 +58,7 @@ plot(t, U_CLOaug(3,:),'g','linewidth',1.5)
 plot(t,umax*ones(size(t)),'k--')
 plot(t,-umax*ones(size(t)),'k--')
 xlabel('t (secs)','FontSize',14)
-ylabel('u effort (m/s^2)','FontSize',14)
+ylabel('u effort (km/s^2)','FontSize',14)
 legend('u_1','u_2','u_3','u constraint')
 exportgraphics(gcf,[pwd fname '_input.png']);
 
