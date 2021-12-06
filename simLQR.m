@@ -62,4 +62,10 @@ ylabel('u effort (m/s^2)','FontSize',14)
 legend('u_1','u_2','u_3','u constraint')
 exportgraphics(gcf,[pwd fname '_input.png']);
 
+%% CL Poles
+figure
+pzmap(CLaugsys,'r');
+grid on
+exportgraphics(gcf,[pwd fname 'pzPlot.png']);
+
 end
