@@ -112,7 +112,7 @@ leunberger(A,B,C,F,K,P_L,t,r,x0_guess, "Images/obs_nonzero_init_err");
 %% LQR Optimal State Feedback WITHOUT Integral control and WITHOUT Observer
 
 t = t';
-r = [r_MO1 r_zero+r_y_neg_10 r_zero];
+r = [r_zero r_MO2 r_zero];
 
 %%Actuator constraints
 umax = 5; %??? what is a reasonable acceleration constraint ???
@@ -196,12 +196,12 @@ augOLsys = ss(Aaug,Baug,Caug,Daug);
 
 %Define closed-loop plant poles via LQR (only vary awts for now)
 awts = [ones(1,n/2)*100, ones(1,n/2),50,50,50]; %initial design: relative penalties
-bwts = [1,10,1];
+bwts = [1,1,1];
 rho = 12;
 
 awts = awts./sum(awts);
 bwts = bwts./sum(bwts);
-xmax = [10, 10, 10, .1, .1, .1, .1^2, .1^2, .1^2];
+xmax = [10, 10, 10, 1, 1, 1, 1^2, 1^2, 1^2];
 Qaug =  diag(awts./xmax); 
 Raug =  rho*diag(bwts./umax); %rho * eye(p);
 
