@@ -37,12 +37,17 @@ fprintf("Rank of controllability matrix = %d\n",rank(P));
 fprintf("Rank of observability matrix = %d\n", rank(O));
 
 %% Generating r(t) for different mission scenarios 
-dt = 0.01;
-t = 0:dt:60;
+dt = 1;
+altitude = 500; % km
+r_earth = 6371; % km
+a = altitude + r_earth;
+mu_earth = 3.986e5;
+period = 2*pi*sqrt(a^3/mu_earth);
+t = 0:dt:period;
 rmag = 1;
 x0 = [0 -10 0 0 0 0]';
-[r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10] = r_t_generator(rmag,t,dt,x0);
-plot(t,r_MO1)
+[r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10] = r_t_generator(rmag,t,dt,x0,period);
+% plot(t,r_MO1)
 
 %% Open Loop
 [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,r_MO3_zeros,t_r_MO3,t,x0);
