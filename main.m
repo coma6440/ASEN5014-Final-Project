@@ -83,16 +83,22 @@ CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
 
 % Feedback control for MO1, r(t) = [r_MO1 0 0]
 r = [r_MO1 r_zero+r_y_neg_10 r_zero];
+r1 = r;
+t1 = t;
 fig_num = 5;
 CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num);
 
 % % Feedback control for MO1, r(t) = [0 r_MO2 0]
 r = [r_zero r_MO2 r_zero];
+r2 = r;
+t2 = t;
 fig_num = 6;
 CL_Ref_Track_Cont(A,B,C,D,CL_poles,t,r,x0,fig_num); 
 % 
 % % Feedback control for MO1, r(t) = [r_MO1 0 0]
 r = [r_MO3_zeros r_MO3_zeros+r_y_neg_10(1:length(r_MO3_zeros),:) r_MO3];
+r3 = r;
+t3 = t_r_MO3;
 fig_num = 7;
 [~, K, F] = CL_Ref_Track_Cont(A,B,C,D,CL_poles,t_r_MO3,r,x0,fig_num);
 
@@ -203,6 +209,7 @@ augOLsys = ss(Aaug,Baug,Caug,Daug);
 awts = [ones(1,n/2)*100, ones(1,n/2),50,50,50]; %initial design: relative penalties
 bwts = [1,1,1];
 rho = 12;
+umax = .5; %??? what is a reasonable acceleration constraint ???
 
 awts = awts./sum(awts);
 bwts = bwts./sum(bwts);
@@ -216,5 +223,11 @@ XCLO_IC = 0*ones(15,1); %change the IC to 0.1's and see what happens!!
 % XCLO_IC = 0.1*ones(15,1); %change the IC to 0.1's and see what happens!!
 
 [CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
-    t,r,XCLO_IC,umax,'/Images/LQR_refx_initErrx');
+    t1,r1,XCLO_IC,umax,'/Images/LQR_refx_initErrx');
+
+[CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
+    t2,r2,XCLO_IC,umax,'/Images/LQR_refx_initErrx');
+
+[CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
+    t3,r3,XCLO_IC,umax,'/Images/LQR_refx_initErrx');
 
