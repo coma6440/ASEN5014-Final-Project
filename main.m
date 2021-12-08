@@ -197,7 +197,7 @@ fprintf("Simulating LQR with integral and with observer for r3(t)...\n");
 [CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
     t3,r3,XCLO_IC,umax,'Images/LQR_r3');
 
-fprintf("Simulating LQR with integral and with observer for r3(t)...\n");
+fprintf("Simulating LQR with integral and with observer for r4(t)...\n");
 [CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
     t4,r4,XCLO_IC,umax,'Images/LQR_r4');
 
