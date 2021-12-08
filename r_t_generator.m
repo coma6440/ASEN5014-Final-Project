@@ -45,10 +45,6 @@ function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10
     
     %Stay at y IC of -10 km 
     r_y_neg_10 = ones(length(t),1)*-10;
-
-
-    figure(2)
-    plot(t_r_MO3,r_MO3)
 end
 
 
