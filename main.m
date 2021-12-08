@@ -117,53 +117,58 @@ leunberger(A,B,C,F,K,P_L,t3,r3,umax,x0_guess, "Images/obs_nonzero_init_err_r3");
 fprintf("Simulating closed loop with observer, nonzero error for r4(t)...\n");
 leunberger(A,B,C,F,K,P_L,t4,r4,umax,x0_guess, "Images/obs_nonzero_init_err_r3");
 
-%% LQR Optimal State Feedback WITHOUT Integral control and WITHOUT Observer
-fprintf("Simulating LQR without integral and without observer...\n");
-t = t';
-r = [r_zero r_MO2 r_zero];
+% %% LQR Optimal State Feedback WITHOUT Integral control and WITHOUT Observer
+% fprintf("Simulating LQR without integral and without observer...\n");
+% t = t';
+% r = [r_zero r_MO2 r_zero];
+% 
+% 
+% n = size(A,1); %#nominal states
+% m = size(B,2); %#nominal inputs
+% p = size(C,1); %#nominal outputs
+% 
+% %Define closed-loop plant poles via LQR (only vary awts for now)
+% awts = [ones(1,n/2)*100, ones(1,n/2)]; %initial design: relative penalties
+% bwts = ones(1,p);
+% rho = 1;
+% 
+% awts = awts./sum(awts);
+% xmax = [10 10 10 .1 .1 .1];
+% Q =  diag(awts./xmax); 
+% R =  rho*diag(bwts./umax); %rho * eye(p);
+% 
+% OLsys = ss(A,B,C,D);
+% [K,W,clEvals] = lqr(OLsys,Q,R); %get optimal K, W
+% 
+% F = inv(C/(-A+B*K)*B);
+% 
+% %CL system
+% Acl = A - B*K;
+% Bcl = B*F;
+% Ccl = C;
+% Dcl = D;
+% CLsys = ss(Acl,Bcl,Ccl,Dcl);
+% 
+% %%Check that closed-loop system specs met; change rho o'wise
+% %%get response to first reference input profile:
+% [Y_CL1,~,X_CL1] = lsim(CLsys,r',t');
+% %compute resulting actuator efforts in each case, where u = -Kx + Fr
+% U_CL1 = -K*X_CL1' + F*r';
+% 
+% % Plot states
+% plot_states(t,X_CL1,r,"Images/LQR");
+% %%Plot output response for each input/output channel; compare to desired
+% %%reference positions
+% plot_outputs(t,Y_CL1,r,"Images/LQR");
+% %%Plot actuator efforts and compare to constraints on u
+% plot_controls(t,U_CL1,umax,"Images/LQR");
 
+%% LQR WITH integral control and observer
 
 n = size(A,1); %#nominal states
 m = size(B,2); %#nominal inputs
 p = size(C,1); %#nominal outputs
 
-%Define closed-loop plant poles via LQR (only vary awts for now)
-awts = [ones(1,n/2)*100, ones(1,n/2)]; %initial design: relative penalties
-bwts = ones(1,p);
-rho = 1;
-
-awts = awts./sum(awts);
-xmax = [10 10 10 .1 .1 .1];
-Q =  diag(awts./xmax); 
-R =  rho*diag(bwts./umax); %rho * eye(p);
-
-OLsys = ss(A,B,C,D);
-[K,W,clEvals] = lqr(OLsys,Q,R); %get optimal K, W
-
-F = inv(C/(-A+B*K)*B);
-
-%CL system
-Acl = A - B*K;
-Bcl = B*F;
-Ccl = C;
-Dcl = D;
-CLsys = ss(Acl,Bcl,Ccl,Dcl);
-
-%%Check that closed-loop system specs met; change rho o'wise
-%%get response to first reference input profile:
-[Y_CL1,~,X_CL1] = lsim(CLsys,r',t');
-%compute resulting actuator efforts in each case, where u = -Kx + Fr
-U_CL1 = -K*X_CL1' + F*r';
-
-% Plot states
-plot_states(t,X_CL1,r,"Images/LQR");
-%%Plot output response for each input/output channel; compare to desired
-%%reference positions
-plot_outputs(t,Y_CL1,r,"Images/LQR");
-%%Plot actuator efforts and compare to constraints on u
-plot_controls(t,U_CL1,umax,"Images/LQR");
-
-%% LQR WITH integral control and observer
 Aaug = [A zeros(6,3); -C zeros(3,3)];
 Baug = [B; zeros(3,3)];
 Caug = [C zeros(3,3)];
@@ -171,13 +176,13 @@ Daug = zeros(size(Caug,1),size(Baug,2));
 augOLsys = ss(Aaug,Baug,Caug,Daug);
 
 %Define closed-loop plant poles via LQR (only vary awts for now)
-awts = [ones(1,n/2)*100, ones(1,n/2),50,50,50]; %initial design: relative penalties
+awts = [ones(1,n/2)*1000, 100*ones(1,n/2),50*ones(1,n/2)]; %initial design: relative penalties
 bwts = [1,1,1];
-rho = 12;
+rho = 10000;
 
 awts = awts./sum(awts);
 bwts = bwts./sum(bwts);
-xmax = [10, 10, 10, 1, 1, 1, 1^2, 1^2, 1^2];
+xmax = [10*ones(1,n/2), 1/100*ones(1,n/2), 20^2*ones(1,n/2)];
 Qaug =  diag(awts./xmax); 
 Raug =  rho*diag(bwts./umax); %rho * eye(p);
 

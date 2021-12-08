@@ -30,7 +30,7 @@ ylabel('z (km)')
 xlabel('Time (s)')
 legend('z(t)','Reference')
 
-saveas(f, fname + "_pos.png");
+exportgraphics(f, fname + "_pos.png");
 
 % Plotting velocity
 
@@ -58,6 +58,6 @@ plot(t,x(:,6))
 ylabel('z dot (km/s)')
 xlabel('Time (s)')
 
-saveas(f, fname + "_vel.png");
+exportgraphics(f, fname + "_vel.png");
 close
 end

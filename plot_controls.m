@@ -33,5 +33,5 @@ ylabel('uz (km/s^2)')
 xlabel('Time (s)')
 legend(["Input", "Bounds"])
 
-saveas(f, fname + "_controls.png");
+exportgraphics(f, fname + "_controls.png");
 end

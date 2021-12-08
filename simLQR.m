@@ -32,8 +32,9 @@ plot_outputs(t,Y_CLOaug,r,fname)
 plot_controls(t,U_CLOaug,umax,fname)
 
 %% CL Poles
-f = figure('Visible', 'Off');
+f = figure('Visible', 'off');
 pzmap(CLaugsys,'r');
+grid on
 title("")
 saveas(f, fname + "_pzmap.png");
 

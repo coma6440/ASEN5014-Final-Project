@@ -30,6 +30,6 @@ ylabel('z (km)')
 xlabel('Time (s)')
 legend('z(t)','Reference')
 
-saveas(f, fname + "_out.png");
+exportgraphics(f, fname + "_out.png");
 close
 end

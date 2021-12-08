@@ -22,7 +22,7 @@ grid on
 plot(t,x(:,9))
 ylabel('z error (m)')
 xlabel('Time (s)')
-saveas(f, fname + "_pos_error.png");
+exportgraphics(f, fname + "_pos_error.png");
 close
 
 % plot velocity error states
@@ -48,6 +48,6 @@ grid on
 plot(t,x(:,12))
 ylabel('z dot error (m)')
 xlabel('Time (s)')
-saveas(f, fname + "_vel_error.png");
+exportgraphics(f, fname + "_vel_error.png");
 close
 end
