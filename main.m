@@ -51,45 +51,54 @@ x0 = [0 -10 0 0 0 0]';
 fprintf("Generating r(t) profiles...\n");
 [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10] = r_t_generator(rmag,t,dt,x0,period);
 
+
 %% Open Loop
 fprintf("Simulating open loop response...\n");
 [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,r_MO3_zeros,t_r_MO3,t,x0, "Images/OL");
 
 %% Closed Loop Reference Tracking Feedback Control
 % Setting CL poles
-% CL_poles = [-1 -2 -3 -4 -5 -6];
-% CL_poles = [-15 -20 -5 -25 -10 -30]; % Satisfies specs for all r(t), u(t) way too high, will adjust after require are specified;
-CL_poles = [-0.0001 -0.0002 -1 -2 -3 -4]; 
+% CL_poles = [-1 -2 -3 -4 -.02 -.011]; % x tuned well;
+% CL_poles = [-1 -.017 -.025 -4 -.02 -.011]; % x and y tuned well;
+CL_poles = [-.016 -.017 -.025 -.015 -.02 -.011]; % x y and z tuned well;
 
-% 2nd and 3rd pole affects y response only
-% 1st and 4th pole effects z response only
-% 5th and 6th poles effects z response only 
+% CL_poles = [-0.0001 -0.0002 -1 -2 -3 -4]; 
+
+% 1st pole - z
+% 2nd pole - y
+% 3rd pole - y
+% 4th pole - z
+% 5th pole - x - less sensitive
+% 6th pole - x - more sensitive
+
 
 % % Feedback control for r(t) = [step step step]
+figure(1)
 fprintf("Simulating closed loop response to r1(t)...\n");
 r1 = [r_step r_step+r_y_neg_10 r_step];
 t1 = t;
 CL_Ref_Track_Cont(A,B,C,D,CL_poles,t1,r1,umax,x0, "Images/CL_r1");
 
 % Feedback control for MO1, r(t) = [r_MO1 0 0]
+figure(2)
 fprintf("Simulating closed loop response to r2(t)...\n");
 r2 = [r_MO1 r_zero+r_y_neg_10 r_zero];
 t2 = t;
 CL_Ref_Track_Cont(A,B,C,D,CL_poles,t2,r2,umax,x0, "Images/CL_r2");
 
 % % Feedback control for MO1, r(t) = [0 r_MO2 0]
+figure(3)
 fprintf("Simulating closed loop response to r3(t)...\n");
 r3 = [r_zero r_MO2 r_zero];
 t3 = t;
 CL_Ref_Track_Cont(A,B,C,D,CL_poles,t3,r3,umax,x0, "Images/CL_r3"); 
 % 
+figure(4)
 % % Feedback control for MO1, r(t) = [r_MO1 0 0]
 fprintf("Simulating closed loop response to r4(t)...\n");
 r4 = [r_MO3_zeros r_MO3_zeros+r_y_neg_10(1:length(r_MO3_zeros),:) r_MO3];
 t4 = t_r_MO3;
 [~, K, F] = CL_Ref_Track_Cont(A,B,C,D,CL_poles,t4,r4,umax,x0, "Images/CL_r4");
-
-% Does no coupling n states make sense? Ask Reade and Conner 
 
 %% Luenberger observer 
 P_L = [-3, -4, -5, -6, -7, -8];

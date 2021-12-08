@@ -30,11 +30,11 @@ function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10
     %%
     
     % Mission Obj 3
-    dur = period/4;
+    dur = period/2;
     Tf = t(end);
     [r_MO3_2,t2] = gensig("square",dur,Tf);
     u = 2*r_MO3_2-rmag;
-    zero_time = 1;
+    zero_time = .25;
 
     r_MO3 = [zeros(1,zero_time*round(length(t)/length(u))) zeros(1,length(u))];
     r_MO3(zero_time*round(length(t)/length(u))+1:end) = u';
