@@ -6,5 +6,4 @@
 .MATLABDriveTag
 
 # Images
-/Images/*
-Images/*
+Images/*.png
