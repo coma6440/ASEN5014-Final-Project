@@ -4,3 +4,6 @@
 # OSX / *nix default autosave extension
 *.m~
 .MATLABDriveTag
+
+# Images
+/Images/*
