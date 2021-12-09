@@ -73,27 +73,24 @@ CL_poles = [-.016 -.017 -.025 -.015 -.02 -.011]; % x y and z tuned well;
 
 
 % % Feedback control for r(t) = [step step step]
-figure(1)
 fprintf("Simulating closed loop response to r1(t)...\n");
 r1 = [r_step r_step+r_y_neg_10 r_step];
 t1 = t;
 CL_Ref_Track_Cont(A,B,C,D,CL_poles,t1,r1,umax,x0, "Images/CL_r1");
 
 % Feedback control for MO1, r(t) = [r_MO1 0 0]
-figure(2)
 fprintf("Simulating closed loop response to r2(t)...\n");
 r2 = [r_MO1 r_zero+r_y_neg_10 r_zero];
 t2 = t;
 CL_Ref_Track_Cont(A,B,C,D,CL_poles,t2,r2,umax,x0, "Images/CL_r2");
 
 % % Feedback control for MO1, r(t) = [0 r_MO2 0]
-figure(3)
 fprintf("Simulating closed loop response to r3(t)...\n");
 r3 = [r_zero r_MO2 r_zero];
 t3 = t;
 CL_Ref_Track_Cont(A,B,C,D,CL_poles,t3,r3,umax,x0, "Images/CL_r3"); 
 % 
-figure(4)
+
 % % Feedback control for MO1, r(t) = [r_MO1 0 0]
 fprintf("Simulating closed loop response to r4(t)...\n");
 r4 = [r_MO3_zeros r_MO3_zeros+r_y_neg_10(1:length(r_MO3_zeros),:) r_MO3];
@@ -101,10 +98,11 @@ t4 = t_r_MO3;
 [~, K, F] = CL_Ref_Track_Cont(A,B,C,D,CL_poles,t4,r4,umax,x0, "Images/CL_r4");
 
 %% Luenberger observer 
-P_L = [-3, -4, -5, -6, -7, -8];
+P_L = [-0.01, -0.02, -0.03, -0.04, -0.05, -0.06];
 x0_true = [x0; zeros(6,1)];
-x0_error = 1*ones(6,1);
-x0_guess = [x0 + x0_error; 10.*x0_error];
+% do these magnitudes make sense? 100m and 1 m/s error
+x0_error = [0.1*ones(3,1); 0.001*ones(3,1)];
+x0_guess = [x0 + x0_error; 2.*x0_error];
 
 % Simulate with zero initial error
 fprintf("Simulating closed loop with observer, zero error for r1(t)...\n");
@@ -114,7 +112,7 @@ leunberger(A,B,C,F,K,P_L,t2,r2,umax,x0_true, "Images/obs_zero_init_err_r2");
 fprintf("Simulating closed loop with observer, zero error for r3(t)...\n");
 leunberger(A,B,C,F,K,P_L,t3,r3,umax,x0_true, "Images/obs_zero_init_err_r3");
 fprintf("Simulating closed loop with observer, zero error for r4(t)...\n");
-leunberger(A,B,C,F,K,P_L,t4,r4,umax,x0_true, "Images/obs_zero_init_err_r3");
+leunberger(A,B,C,F,K,P_L,t4,r4,umax,x0_true, "Images/obs_zero_init_err_r4");
 
 % Simulate with non-zero initial error
 fprintf("Simulating closed loop with observer, nonzero error for r1(t)...\n");
@@ -124,9 +122,10 @@ leunberger(A,B,C,F,K,P_L,t2,r2,umax,x0_guess, "Images/obs_nonzero_init_err_r2");
 fprintf("Simulating closed loop with observer, nonzero error for r3(t)...\n");
 leunberger(A,B,C,F,K,P_L,t3,r3,umax,x0_guess, "Images/obs_nonzero_init_err_r3");
 fprintf("Simulating closed loop with observer, nonzero error for r4(t)...\n");
-leunberger(A,B,C,F,K,P_L,t4,r4,umax,x0_guess, "Images/obs_nonzero_init_err_r3");
+leunberger(A,B,C,F,K,P_L,t4,r4,umax,x0_guess, "Images/obs_nonzero_init_err_r4");
 
-% %% LQR Optimal State Feedback WITHOUT Integral control and WITHOUT Observer
+
+%% LQR Optimal State Feedback WITHOUT Integral control and WITHOUT Observer
 % fprintf("Simulating LQR without integral and without observer...\n");
 % t = t';
 % r = [r_zero r_MO2 r_zero];
@@ -197,6 +196,7 @@ Raug =  rho*diag(bwts./umax); %rho * eye(p);
 
 [Kaug,Waug,clEvalsAug] = lqr(augOLsys,Qaug,Raug);
 
+% TODO: I think we need to change these?
 XCLO_IC = 0*ones(15,1); %change the IC to 0.1's and see what happens!!
 % XCLO_IC = 0.1*ones(15,1); %change the IC to 0.1's and see what happens!!
 fprintf("Simulating LQR with integral and with observer for r1(t)...\n");

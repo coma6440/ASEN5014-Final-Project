@@ -6,21 +6,21 @@ nexttile
 hold on
 grid on
 plot(t,x(:,7))
-ylabel('x error (m)')
+ylabel('x error (km)')
 xlabel('Time (s)')
 
 nexttile
 hold on
 grid on
 plot(t,x(:,8))
-ylabel('y error (m)')
+ylabel('y error (km)')
 xlabel('Time (s)')
 
 nexttile
 hold on
 grid on
 plot(t,x(:,9))
-ylabel('z error (m)')
+ylabel('z error (km)')
 xlabel('Time (s)')
 exportgraphics(f, fname + "_pos_error.png");
 close
@@ -32,21 +32,21 @@ nexttile
 hold on
 grid on
 plot(t,x(:,10))
-ylabel('x dot error (m)')
+ylabel('x dot error (km)')
 xlabel('Time (s)')
 
 nexttile
 hold on
 grid on
 plot(t,x(:,11))
-ylabel('y dot error (m)')
+ylabel('y dot error (km)')
 xlabel('Time (s)')
 
 nexttile
 hold on
 grid on
 plot(t,x(:,12))
-ylabel('z dot error (m)')
+ylabel('z dot error (km)')
 xlabel('Time (s)')
 exportgraphics(f, fname + "_vel_error.png");
 close
