@@ -34,4 +34,7 @@ xlabel('Time (s)')
 legend(["Input", "Bounds"])
 
 exportgraphics(f, fname + "_controls.png");
+
+% Control effort
+[ex, ey, ez, et] = control_effort(t,u);
 end
