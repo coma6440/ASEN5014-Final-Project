@@ -17,7 +17,7 @@ function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10
     MO2_mag = 2;
     r_MO1 = zeros(length(t),1); 
     r_MO1(t>=period/10) = MO2_mag*rmag;
-    r_MO1(t>=period/1.5) = 0;
+    r_MO1(t>=period*6/10) = 0;
     
     % Mission Obj 2
     ramp_time = period/2;
