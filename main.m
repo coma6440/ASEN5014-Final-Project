@@ -186,7 +186,7 @@ Daug = zeros(size(Caug,1),size(Baug,2));
 augOLsys = ss(Aaug,Baug,Caug,Daug);
 
 %Define closed-loop plant poles via LQR (only vary awts for now)
-awts = [ones(1,n/2)*100, 250*ones(1,n/2),50*ones(1,n/2)]; %initial design: relative penalties
+awts = [ones(1,n/2)*80, 250*ones(1,n/2),50*ones(1,n/2)]; %initial design: relative penalties
 bwts = [1,1.5,1];
 rho = 3000;
 
@@ -201,7 +201,7 @@ Raug =  rho*diag(bwts./umax); %rho * eye(p);
 % TODO: I think we need to change these?
 % XCLO_IC = [x0_guess;0*ones(3,1)];
 XCLO_IC = [0*ones(3,1);x0_guess(4:end);0*ones(3,1)];
-% XCLO_IC = 0*ones(15,1);
+XCLO_IC = 0*ones(15,1);
 % XCLO_IC = 0.1*ones(15,1); %change the IC to 0.1's and see what happens!!
 fprintf("Simulating LQR with integral and with observer for r1(t)...\n");
 [CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
