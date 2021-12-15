@@ -156,8 +156,8 @@ Raug =  rho*diag(bwts./umax); %rho * eye(p);
 
 % TODO: I think we need to change these?
 % XCLO_IC = [x0_guess;0*ones(3,1)];
-XCLO_IC = [0*ones(3,1);x0_guess(4:end);0*ones(3,1)];
-XCLO_IC = 0*ones(15,1);
+XCLO_IC = [x0_guess(1:end);0*ones(3,1)];
+% XCLO_IC = 0*ones(15,1);
 % XCLO_IC = 0.1*ones(15,1); %change the IC to 0.1's and see what happens!!
 fprintf("Simulating LQR with integral and with observer for r1(t)...\n");
 [CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys_OL,augOLsys,Kaug,P_L,...
