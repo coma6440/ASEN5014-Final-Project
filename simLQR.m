@@ -1,4 +1,5 @@
-function [CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys,augsys,Kaug,L_poles,t,r,x0,umax,fname)
+function [CLaugsys,Y_CLOaug,U_CLOaug,Faug] = simLQR(sys,augsys,Kaug,...
+    L_poles,t,r,x0,umax,fname)
 
 [A,B,C,~] = ssdata(sys);
 [Aaug,Baug,~,~] = ssdata(augsys);

@@ -1,4 +1,5 @@
-function [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,r_MO3_zeros,t_r_MO3,t,x0, fname);
+function [OL_poles,y1] = OL_Response(A,sys_OL,r_step,r_zero,r_piece,r_MO1,...
+    r_MO2,r_MO3,r_MO3_zeros,t_r_MO3,t,x0, fname);
     %% Determining OL Response 
     OL_poles = eig(A);
 % 

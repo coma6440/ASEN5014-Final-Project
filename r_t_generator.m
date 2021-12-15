@@ -1,4 +1,5 @@
-function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10] = r_t_generator(rmag,t,dt,x0,period)
+function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,...
+    r_y_neg_10] = r_t_generator(rmag,t,dt,x0,period)
 %%    
 % Basic step desired
     r_step = zeros(1,length(t));
@@ -23,7 +24,8 @@ function [r_step,r_zero,r_piece,r_MO1,r_MO2,r_MO3,t_r_MO3,r_MO3_zeros,r_y_neg_10
     ramp_time = period/2;
     M02_mag = 9;
     r_MO2 = zeros(1,length(t));
-    r_MO2(t>200) = rmag*M02_mag/ramp_time*t(200/dt:end-2)-t(200/dt)*rmag*M02_mag/ramp_time;
+    r_MO2(t>200) = rmag*M02_mag/ramp_time*t(200/dt:end-2)-t(200/dt)*rmag*...
+        M02_mag/ramp_time;
     r_MO2(t>200+ramp_time/rmag) = rmag*M02_mag;
     r_MO2 = r_MO2'+x0(2);
     
