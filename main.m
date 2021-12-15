@@ -104,7 +104,7 @@ P_L = [-0.01, -0.02, -0.03, -0.04, -0.05, -0.06];
 x0_true = [x0; zeros(6,1)];
 % do these magnitudes make sense? 100m and 1 m/s error
 x0_error = [0.1*ones(3,1); 0.001*ones(3,1)];
-x0_guess = [x0 + x0_error; x0_error];
+x0_guess = [x0; x0_error];
 
 % Output and states are both the estimated quantity, not true
 
